@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <context:component-scan base-package="com.ferko.gmall.service"/>
+
+    <!--1、指定当前服务/应用的名字（同样的服务名字相同，不要和别的服务同名）-->
+    <dubbo:application name="user-service-provider"/>
+
+    <!--2、指定注册中心的位置 两种写法均可-->
+    <!--<dubbo:registry address="zookeeper://192.168.100.101:2181"/>-->
+    <dubbo:registry protocol="zookeeper" address="192.168.100.101:2181"/>
+
+    <!--3、指定通信规则(通信协议和端口号)-->
+    <dubbo:protocol name="dubbo" port="20880"/>
+
+    <!--4、暴露服务-->
+    <dubbo:service interface="com.ferko.gmall.service.UserService" ref="userServiceImpl"/>
+
+    <!--暴露服务的真正实现-->
+    <bean id="userServiceImpl" class="com.ferko.gmall.service.impl.UserServiceImpl"/>
+
+    <!-- 监控中心-->
+<!--    <dubbo:monitor protocol="registry"/>-->
+
+</beans>

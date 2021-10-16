@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <context:component-scan base-package="com.ferko.gmall.service"/>
+
+    <!--1、指定当前服务/应用的名字（同样的服务名字相同，不要和别的服务同名）-->
+    <dubbo:application name="user-service-consumer"/>
+
+    <!--2、指定注册中心的位置 两种写法均可-->
+    <!--<dubbo:registry address="zookeeper://192.168.100.101:2181"/>-->
+    <dubbo:registry protocol="zookeeper" address="192.168.100.101:2181"/>
+
+
+    <!--3、声明需要调用的远程服务的接口，生成远程服务代理对象，id可以自定义对象名称-->
+    <!--
+        timeout属性：
+        1. 方法级优先，接口级次之，全局配置再次之。
+        2. 如果级别一样，则消费方优先，提供方次之。
+    -->
+    <!-- timeout="0" 默认是1000ms-->
+    <!-- retries="" 重试次数，0代表不重试，不包含第一次调用
+        幂等（设置重试次数）【查询、删除、修改】、非幂等操作（不能设置重试次数）
+    -->
+    <dubbo:reference interface="com.ferko.gmall.service.UserService"
+                     id="userService" timeout="5000" retries="3"/>
+
+</beans>
